@@ -8,18 +8,25 @@ Hardware and software requirements for Immich:
 
 ## Software
 
-- [Docker](https://docs.docker.com/engine/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+Immich requires [**Docker**](https://docs.docker.com/get-started/get-docker/) with the **Docker Compose plugin**:
+
+- **Docker Engine**: This CLI variant is suitable for Linux servers (or Windows via WSL2).
+- **Docker Desktop**: This GUI variant is suitable for Linux desktop (or Windows or macOS).
+
+The Compose plugin will be installed by both Docker Engine and Desktop by following the linked installation guides; it can also be [separately installed](https://docs.docker.com/compose/install/).
 
 :::note
-Immich requires the command `docker compose` - the similarly named `docker-compose` is [deprecated](https://docs.docker.com/compose/migrate/) and is no longer compatible with Immich.
+Immich requires the command `docker compose`; the similarly named `docker-compose` is [deprecated](https://docs.docker.com/compose/migrate/) and is no longer supported by Immich.
 :::
 
 ## Hardware
 
 - **OS**: Recommended Linux operating system (Ubuntu, Debian, etc).
-  - Windows is supported with [Docker Desktop on Windows](https://docs.docker.com/desktop/install/windows-install/) or [WSL 2](https://docs.docker.com/desktop/wsl/).
-  - macOS is supported with [Docker Desktop on Mac](https://docs.docker.com/desktop/install/mac-install/).
+  - Non-Linux OSes tend to provide a poor Docker experience and are strongly discouraged.
+    Our ability to assist with setup or troubleshooting on non-Linux OSes will be severely reduced.
+    If you still want to try to use a non-Linux OS, you can set it up as follows:
+    - Windows: [Docker Desktop on Windows](https://docs.docker.com/desktop/install/windows-install/) or [WSL 2](https://docs.docker.com/desktop/wsl/).
+    - macOS: [Docker Desktop on Mac](https://docs.docker.com/desktop/install/mac-install/).
 - **RAM**: Minimum 4GB, recommended 6GB.
 - **CPU**: Minimum 2 cores, recommended 4 cores.
 - **Storage**: Recommended Unix-compatible filesystem (EXT4, ZFS, APFS, etc.) with support for user/group ownership and permissions.
