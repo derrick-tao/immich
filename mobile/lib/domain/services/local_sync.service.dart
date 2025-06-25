@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:immich_mobile/domain/interfaces/local_album.interface.dart';
 import 'package:immich_mobile/domain/models/asset/base_asset.model.dart';
 import 'package:immich_mobile/domain/models/local_album.model.dart';
 import 'package:immich_mobile/domain/models/store.model.dart';
 import 'package:immich_mobile/domain/services/store.service.dart';
+import 'package:immich_mobile/infrastructure/repositories/local_album.repository.dart';
 import 'package:immich_mobile/platform/native_sync_api.g.dart';
 import 'package:immich_mobile/presentation/pages/dev/dev_logger.dart';
 import 'package:immich_mobile/utils/diff.dart';
@@ -14,14 +14,14 @@ import 'package:logging/logging.dart';
 import 'package:platform/platform.dart';
 
 class LocalSyncService {
-  final ILocalAlbumRepository _localAlbumRepository;
+  final DriftLocalAlbumRepository _localAlbumRepository;
   final NativeSyncApi _nativeSyncApi;
   final Platform _platform;
   final StoreService _storeService;
   final Logger _log = Logger("DeviceSyncService");
 
   LocalSyncService({
-    required ILocalAlbumRepository localAlbumRepository,
+    required DriftLocalAlbumRepository localAlbumRepository,
     required NativeSyncApi nativeSyncApi,
     required StoreService storeService,
     Platform? platform,
@@ -66,7 +66,7 @@ class LocalSyncService {
       if (_platform.isAndroid) {
         for (final album in dbAlbums) {
           final deviceIds = await _nativeSyncApi.getAssetIdsForAlbum(album.id);
-          await _localAlbumRepository.syncAlbumDeletes(album.id, deviceIds);
+          await _localAlbumRepository.syncDeletes(album.id, deviceIds);
         }
       }
 
@@ -113,7 +113,7 @@ class LocalSyncService {
       }
 
       final dbAlbums =
-          await _localAlbumRepository.getAll(sortBy: SortLocalAlbumsBy.id);
+          await _localAlbumRepository.getAll(sortBy: {SortLocalAlbumsBy.id});
 
       await diffSortedLists(
         dbAlbums,
@@ -252,7 +252,7 @@ class LocalSyncService {
               .then((a) => a.toLocalAssets())
           : <LocalAsset>[];
       final assetsInDb = dbAlbum.assetCount > 0
-          ? await _localAlbumRepository.getAssetsForAlbum(dbAlbum.id)
+          ? await _localAlbumRepository.getAssets(dbAlbum.id)
           : <LocalAsset>[];
 
       if (deviceAlbum.assetCount == 0) {
@@ -365,6 +365,7 @@ extension on Iterable<PlatformAsset> {
       (e) => LocalAsset(
         id: e.id,
         name: e.name,
+        checksum: null,
         type: AssetType.values.elementAtOrNull(e.type) ?? AssetType.other,
         createdAt: e.createdAt == null
             ? DateTime.now()
@@ -372,6 +373,8 @@ extension on Iterable<PlatformAsset> {
         updatedAt: e.updatedAt == null
             ? DateTime.now()
             : DateTime.fromMillisecondsSinceEpoch(e.updatedAt! * 1000),
+        width: e.width,
+        height: e.height,
         durationInSeconds: e.durationInSeconds,
       ),
     ).toList();
