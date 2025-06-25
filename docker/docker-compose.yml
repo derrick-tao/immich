@@ -60,13 +60,9 @@ services:
     restart: always
 
   database:
-    container_name: immich_postgres
-<<<<<<< HEAD
-    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.1-pgvectors0.2.0
     user: "1000:3000"
-=======
+    container_name: immich_postgres
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:5f6a838e4e44c8e0e019d0ebfe3ee8952b69afc2809b2c25f7b0119641978e91
->>>>>>> upstream/main
     environment:
       DB_USERNAME: ${DB_USERNAME}
       DB_DATABASE_NAME: ${DB_DATABASE_NAME}
